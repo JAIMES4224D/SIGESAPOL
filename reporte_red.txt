@@ -1,0 +1,37 @@
+=== INICIANDO PRUEBAS DE RED SIGESAPOL ===
+
+[1] RESOLUCIÓN DNS:
+Server:		192.168.18.1
+Address:	192.168.18.1#53
+
+Non-authoritative answer:
+Name:	sigesapol.dirsapolpnp.gob.pe
+Address: 181.176.32.82
+
+
+[2] PRUEBA DE CONECTIVIDAD (PING):
+PING sigesapol.dirsapolpnp.gob.pe (181.176.32.82) 56(84) bytes of data.
+64 bytes from 181.176.32.82: icmp_seq=1 ttl=242 time=15.5 ms
+64 bytes from 181.176.32.82: icmp_seq=2 ttl=242 time=5.27 ms
+64 bytes from 181.176.32.82: icmp_seq=3 ttl=242 time=5.00 ms
+64 bytes from 181.176.32.82: icmp_seq=4 ttl=242 time=5.85 ms
+
+--- sigesapol.dirsapolpnp.gob.pe ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3004ms
+rtt min/avg/max/mdev = 5.003/7.907/15.502/4.395 ms
+
+[3] TRAZA DE RUTA (TRACEROUTE):
+traceroute to sigesapol.dirsapolpnp.gob.pe (181.176.32.82), 30 hops max, 60 byte packets
+ 1  _gateway (192.168.18.1)  13.139 ms  13.097 ms  13.182 ms
+ 2  10.86.0.1 (10.86.0.1)  16.787 ms  16.807 ms  17.173 ms
+ 3  10.10.7.5 (10.10.7.5)  17.097 ms  17.090 ms  17.081 ms
+ 4  10.10.7.6 (10.10.7.6)  17.009 ms  16.998 ms  16.968 ms
+ 5  38.253.184.202 (38.253.184.202)  16.938 ms  16.909 ms  16.878 ms
+ 6  181.177.224.6 (181.177.224.6)  16.800 ms  6.749 ms  6.675 ms
+ 7  45.5.68.100 (45.5.68.100)  8.027 ms  12.023 ms  12.621 ms
+ 8  45.183.47.211 (45.183.47.211)  8.698 ms 45.183.47.137 (45.183.47.137)  8.815 ms  8.555 ms
+ 9  190.242.170.23 (190.242.170.23)  10.543 ms  10.359 ms  10.814 ms
+10  181.176.250.85 (181.176.250.85)  10.661 ms  10.599 ms  10.477 ms
+11  181.176.171.49 (181.176.171.49)  10.317 ms  10.349 ms  10.284 ms
+12  181.176.32.82 (181.176.32.82)  10.622 ms  10.714 ms  10.453 ms
+=== PRUEBAS FINALIZADAS ===

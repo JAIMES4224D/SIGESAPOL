@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Diagnóstico de Red · SIGESAPOL · Debian Linux</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg:         #0d1117;
+      --bg2:        #161b22;
+      --bg3:        #1c2128;
+      --border:     #30363d;
+      --green:      #a8ff78;
+      --green-dim:  #4caf50;
+      --cyan:       #79c0ff;
+      --yellow:     #e3b341;
+      --red:        #ff7b72;
+      --purple:     #d2a8ff;
+      --white:      #e6edf3;
+      --muted:      #848d97;
+      --debian-red: #d70751;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── SCANLINE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,.08) 2px,
+        rgba(0,0,0,.08) 4px
+      );
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ── HEADER / HERO ── */
+    header {
+      position: relative;
+      padding: 3rem 2rem 2rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg2);
+      overflow: hidden;
+    }
+
+    header::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 60% 50% at 50% -10%, rgba(215,7,81,.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .header-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .debian-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      background: rgba(215,7,81,.15);
+      border: 1px solid rgba(215,7,81,.4);
+      padding: .25rem .75rem;
+      border-radius: 4px;
+      font-size: .75rem;
+      color: var(--debian-red);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin-bottom: 1.2rem;
+      animation: fadeUp .6s ease both;
+    }
+
+    .debian-logo {
+      width: 16px; height: 16px;
+      background: var(--debian-red);
+      border-radius: 50%;
+      position: relative;
+    }
+    .debian-logo::after {
+      content: '';
+      position: absolute;
+      top: 2px; left: 4px;
+      width: 8px; height: 12px;
+      border: 2px solid var(--bg2);
+      border-radius: 50% 50% 50% 0;
+      transform: rotate(-30deg);
+    }
+
+    .prompt-line {
+      font-size: .85rem;
+      color: var(--muted);
+      margin-bottom: .5rem;
+      animation: fadeUp .6s .1s ease both;
+    }
+    .prompt-line .user { color: var(--green); }
+    .prompt-line .host { color: var(--cyan); }
+    .prompt-line .path { color: var(--purple); }
+
+    h1 {
+      font-family: 'Space Mono', monospace;
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.2;
+      margin-bottom: .75rem;
+      animation: fadeUp .6s .15s ease both;
+    }
+    h1 span { color: var(--green); }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: .9rem;
+      margin-bottom: 1.5rem;
+      animation: fadeUp .6s .2s ease both;
+    }
+
+    .meta-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+      animation: fadeUp .6s .25s ease both;
+    }
+    .tag {
+      font-size: .72rem;
+      padding: .2rem .6rem;
+      border-radius: 3px;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+    }
+    .tag-green  { background: rgba(168,255,120,.1); border: 1px solid rgba(168,255,120,.3); color: var(--green); }
+    .tag-cyan   { background: rgba(121,192,255,.1); border: 1px solid rgba(121,192,255,.3); color: var(--cyan); }
+    .tag-yellow { background: rgba(227,179,65,.1);  border: 1px solid rgba(227,179,65,.3);  color: var(--yellow); }
+    .tag-red    { background: rgba(215,7,81,.12);   border: 1px solid rgba(215,7,81,.4);    color: #ff6b9d; }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(13,17,23,.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      padding: .7rem 2rem;
+    }
+    nav ul {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      gap: 1.5rem;
+      list-style: none;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    nav a {
+      text-decoration: none;
+      color: var(--muted);
+      font-size: .8rem;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      transition: color .2s;
+      white-space: nowrap;
+    }
+    nav a:hover { color: var(--green); }
+
+    /* ── MAIN CONTENT ── */
+    main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2.5rem 2rem 4rem;
+    }
+
+    section { margin-bottom: 3.5rem; }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: .75rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .section-num {
+      font-size: .7rem;
+      color: var(--green);
+      background: rgba(168,255,120,.1);
+      border: 1px solid rgba(168,255,120,.25);
+      padding: .15rem .5rem;
+      border-radius: 3px;
+    }
+    h2 {
+      font-family: 'Space Mono', monospace;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--cyan);
+    }
+
+    /* ── TERMINAL BLOCK ── */
+    .terminal {
+      background: #010409;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 1rem 0;
+    }
+    .terminal-bar {
+      background: var(--bg3);
+      padding: .6rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .dot-r { background: #ff5f57; }
+    .dot-y { background: #ffbd2e; }
+    .dot-g { background: #28c840; }
+    .terminal-title {
+      margin-left: .5rem;
+      font-size: .75rem;
+      color: var(--muted);
+      letter-spacing: .04em;
+    }
+    .terminal-body {
+      padding: 1.25rem 1.5rem;
+      font-size: .82rem;
+      line-height: 1.8;
+      overflow-x: auto;
+    }
+    .terminal-body pre { white-space: pre-wrap; word-break: break-all; }
+
+    .t-prompt { color: var(--green); }
+    .t-cmd    { color: var(--white); }
+    .t-out    { color: var(--muted); }
+    .t-ok     { color: var(--green); }
+    .t-ip     { color: var(--cyan); }
+    .t-hop    { color: var(--yellow); }
+    .t-err    { color: var(--red); }
+    .t-comment{ color: #6e7681; font-style: italic; }
+
+    /* ── RESULT CARDS ── */
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+    .result-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+      position: relative;
+      overflow: hidden;
+      transition: border-color .2s, transform .2s;
+    }
+    .result-card:hover {
+      border-color: var(--green-dim);
+      transform: translateY(-2px);
+    }
+    .result-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--green), var(--cyan));
+    }
+    .card-label { font-size: .7rem; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: .35rem; }
+    .card-value { font-size: 1.05rem; color: var(--green); font-weight: 700; }
+    .card-sub   { font-size: .75rem; color: var(--muted); margin-top: .15rem; }
+
+    /* ── EVIDENCE GALLERY ── */
+    .evidence-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+    .evidence-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: border-color .2s, transform .2s, box-shadow .2s;
+    }
+    .evidence-card:hover {
+      border-color: var(--cyan);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(0,0,0,.4);
+    }
+    .evidence-img {
+      width: 100%;
+      aspect-ratio: 16/10;
+      object-fit: cover;
+      object-position: top;
+      display: block;
+      border-bottom: 1px solid var(--border);
+      filter: saturate(.8) brightness(.9);
+      transition: filter .2s;
+    }
+    .evidence-card:hover .evidence-img { filter: saturate(1) brightness(1); }
+    .evidence-meta {
+      padding: .75rem 1rem;
+    }
+    .evidence-cmd {
+      font-size: .78rem;
+      color: var(--green);
+      margin-bottom: .2rem;
+    }
+    .evidence-desc {
+      font-size: .73rem;
+      color: var(--muted);
+    }
+
+    /* ── LIGHTBOX ── */
+    #lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.9);
+      z-index: 9998;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    #lightbox.open { display: flex; }
+    #lightbox img {
+      max-width: 100%;
+      max-height: 90vh;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+    #lightbox-close {
+      position: fixed;
+      top: 1rem; right: 1.5rem;
+      font-size: 1.5rem;
+      color: var(--muted);
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-family: inherit;
+    }
+    #lightbox-close:hover { color: var(--white); }
+
+    /* ── CODE BLOCK ── */
+    .code-file {
+      background: #010409;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .code-file-header {
+      background: var(--bg3);
+      padding: .6rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+    }
+    .code-file-name { font-size: .8rem; color: var(--yellow); }
+    .code-file-lang { font-size: .7rem; color: var(--muted); }
+    .code-file pre {
+      padding: 1.25rem 1.5rem;
+      font-size: .82rem;
+      line-height: 1.9;
+      overflow-x: auto;
+      color: var(--muted);
+    }
+    .kw  { color: #ff7b72; }
+    .fn  { color: #d2a8ff; }
+    .str { color: #a5d6ff; }
+    .cm  { color: #6e7681; font-style: italic; }
+    .op  { color: var(--green); }
+
+    /* ── TRACEROUTE VIZ ── */
+    .traceroute-viz {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+    }
+    .hop-row {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      margin-bottom: .5rem;
+      font-size: .8rem;
+      animation: slideIn .3s ease both;
+    }
+    .hop-num {
+      width: 24px;
+      text-align: right;
+      color: var(--muted);
+      flex-shrink: 0;
+    }
+    .hop-line {
+      width: 20px;
+      height: 1px;
+      background: var(--border);
+      flex-shrink: 0;
+    }
+    .hop-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .hop-ip   { color: var(--cyan); min-width: 160px; }
+    .hop-ms   { color: var(--green); font-size: .75rem; }
+    .hop-type { font-size: .68rem; color: var(--muted); margin-left: auto; }
+
+    .hop-local  .hop-dot { background: var(--yellow); }
+    .hop-intern .hop-dot { background: var(--purple); }
+    .hop-extern .hop-dot { background: var(--cyan); }
+    .hop-dest   .hop-dot { background: var(--green); box-shadow: 0 0 8px var(--green); }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem;
+      text-align: center;
+      color: var(--muted);
+      font-size: .75rem;
+    }
+    footer a { color: var(--green); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-10px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 8px; height: 1em;
+      background: var(--green);
+      vertical-align: middle;
+      animation: blink 1s step-end infinite;
+      margin-left: 2px;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      header, main { padding-left: 1rem; padding-right: 1rem; }
+      .evidence-grid { grid-template-columns: 1fr; }
+      .result-grid   { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- LIGHTBOX -->
+<div id="lightbox">
+  <button id="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lightbox-img" src="" alt="" />
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="debian-badge">
+      <div class="debian-logo"></div>
+      Debian GNU/Linux 13 "Trixie"
+    </div>
+    <div class="prompt-line">
+      <span class="user">\Juan Pablo</span>
+      <span style="color:var(--muted)"> @ </span>
+      <span class="host">Jeferson</span>
+      <span style="color:var(--muted)"> · </span>
+      <span class="path">~/Alonso</span>
+      <span class="debian-line" >cd /Segundo</span>
+      <span class="path">mkdir Anderson</span>
+      <span style="color:var(--muted)"> · Mayo - 2026</span>
+    </div>
+    <h1>Diagnóstico de Red<br><span>SIGESAPOL</span></h1>
+    <p class="subtitle">Análisis completo de conectividad hacia sigesapol.dirsapolpnp.gob.pe<br>
+    Script automatizado · Evidencias de terminal · Reporte generado</p>
+    <div class="meta-tags">
+      <span class="tag tag-green">✓ DNS OK</span>
+      <span class="tag tag-green">✓ Ping 0% pérdida</span>
+      <span class="tag tag-cyan">12 hops traceroute</span>
+      <span class="tag tag-yellow">Latencia avg 7.9ms</span>
+      <span class="tag tag-red">SIGESAPOL · PNP</span>
+    </div>
+  </div>
+</header>
+
+<!-- NAV -->
+<nav>
+  <ul>
+    <li><a href="#resumen">Resumen</a></li>
+    <li><a href="#dns">DNS</a></li>
+    <li><a href="#ping">Ping</a></li>
+    <li><a href="#traceroute">Traceroute</a></li>
+    <li><a href="#conexiones">Conexiones</a></li>
+    <li><a href="#script">Script</a></li>
+    <li><a href="#evidencias">Evidencias</a></li>
+    <li><a href="#reporte">Reporte</a></li>
+  </ul>
+</nav>
+
+<!-- MAIN -->
+<main>
+
+  <!-- 0. RESUMEN -->
+  <section id="resumen">
+    <div class="section-header">
+      <span class="section-num">00</span>
+      <h2>Resumen Ejecutivo</h2>
+    </div>
+    <div class="result-grid">
+      <div class="result-card">
+        <div class="card-label">Host objetivo</div>
+        <div class="card-value" style="font-size:.85rem">sigesapol</div>
+        <div class="card-sub">.dirsapolpnp.gob.pe</div>
+      </div>
+      <div class="result-card">
+        <div class="card-label">IP resuelta</div>
+        <div class="card-value">181.176.32.82</div>
+        <div class="card-sub">Respuesta no autoritativa</div>
+      </div>
+      <div class="result-card">
+        <div class="card-label">Packet loss</div>
+        <div class="card-value">0%</div>
+        <div class="card-sub">4/4 paquetes recibidos</div>
+      </div>
+      <div class="result-card">
+        <div class="card-label">Latencia promedio</div>
+        <div class="card-value">7.9 ms</div>
+        <div class="card-sub">min 5.0 / max 15.5 ms</div>
+      </div>
+      <div class="result-card">
+        <div class="card-label">Hops traceroute</div>
+        <div class="card-value">12 saltos</div>
+        <div class="card-sub">Destino alcanzado</div>
+      </div>
+      <div class="result-card">
+        <div class="card-label">Estado general</div>
+        <div class="card-value" style="color:var(--green)">OPERATIVO</div>
+        <div class="card-sub">Conectividad confirmada</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 1. DNS -->
+  <section id="dns">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2>Resolución DNS — nslookup</h2>
+    </div>
+    <p style="color:var(--muted);margin-bottom:1rem;font-size:.85rem">
+      Se verifica que el sistema puede traducir el nombre de dominio a una dirección IP mediante el servidor DNS local.
+    </p>
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+        <span class="terminal-title">jefdebian@jefdebian: ~/Documentos</span>
+      </div>
+      <div class="terminal-body">
+        <span class="t-prompt">\DevPass ~/Documentos $</span> <span class="t-cmd">nslookup sigesapol.dirsapolpnp.gob.pe</span><br>
+        <span class="t-out">Server:         </span><span class="t-ip">192.168.18.1</span><br>
+        <span class="t-out">Address:        </span><span class="t-ip">192.168.18.1</span><span class="t-out">#53</span><br>
+        <br>
+        <span class="t-out">Non-authoritative answer:</span><br>
+        <span class="t-out">Name:   sigesapol.dirsapolpnp.gob.pe</span><br>
+        <span class="t-out">Address: </span><span class="t-ok">181.176.32.82</span><br>
+      </div>
+    </div>
+    <div class="result-grid" style="margin-top:1rem">
+      <div class="result-card">
+        <div class="card-label">Servidor DNS</div>
+        <div class="card-value">192.168.18.1</div>
+        <div class="card-sub">Gateway local · Puerto 53</div>
+      </div>
+      <div class="result-card">
+        <div class="card-label">IP resuelta</div>
+        <div class="card-value">181.176.32.82</div>
+        <div class="card-sub">Rango Movistar Perú</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. PING -->
+  <section id="ping">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2>Prueba de Conectividad — ping</h2>
+    </div>
+    <p style="color:var(--muted);margin-bottom:1rem;font-size:.85rem">
+      Se envían 4 paquetes ICMP para verificar que el servidor responde y medir la latencia.
+    </p>
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+        <span class="terminal-title">jefdebian@jefdebian: ~/Documentos</span>
+      </div>
+      <div class="terminal-body">
+        <span class="t-prompt">\DevPass ~/Documentos $</span> <span class="t-cmd">ping -c 4 sigesapol.dirsapolpnp.gob.pe</span><br>
+        <span class="t-out">PING sigesapol.dirsapolpnp.gob.pe (</span><span class="t-ip">181.176.32.82</span><span class="t-out">) 56(84) bytes of data.</span><br>
+        <span class="t-out">64 bytes from </span><span class="t-ip">181.176.32.82</span><span class="t-out">: icmp_seq=1 ttl=242 </span><span class="t-hop">time=15.5 ms</span><br>
+        <span class="t-out">64 bytes from </span><span class="t-ip">181.176.32.82</span><span class="t-out">: icmp_seq=2 ttl=242 </span><span class="t-hop">time=5.27 ms</span><br>
+        <span class="t-out">64 bytes from </span><span class="t-ip">181.176.32.82</span><span class="t-out">: icmp_seq=3 ttl=242 </span><span class="t-hop">time=5.00 ms</span><br>
+        <span class="t-out">64 bytes from </span><span class="t-ip">181.176.32.82</span><span class="t-out">: icmp_seq=4 ttl=242 </span><span class="t-hop">time=5.85 ms</span><br>
+        <br>
+        <span class="t-out">--- sigesapol.dirsapolpnp.gob.pe ping statistics ---</span><br>
+        <span class="t-out">4 packets transmitted, 4 received, </span><span class="t-ok">0% packet loss</span><span class="t-out">, time 3004ms</span><br>
+        <span class="t-out">rtt min/avg/max/mdev = </span><span class="t-ok">5.003/7.907/15.502/4.395 ms</span><br>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. TRACEROUTE -->
+  <section id="traceroute">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2>Traza de Ruta — traceroute</h2>
+    </div>
+    <p style="color:var(--muted);margin-bottom:1rem;font-size:.85rem">
+      Se mapea el camino completo desde el equipo hasta el servidor, identificando cada router intermedio.
+    </p>
+
+    <div class="traceroute-viz">
+      <div style="font-size:.72rem;color:var(--muted);margin-bottom:1rem;letter-spacing:.05em;text-transform:uppercase">
+        Visualización de ruta · 12 saltos · Destino: 181.176.32.82
+      </div>
+      <div class="hop-row hop-local"  style="animation-delay:.05s"><span class="hop-num">1</span><div class="hop-line"></div><div class="hop-dot"></div><span class="hop-ip">192.168.18.1</span><span class="hop-ms">~13.1 ms</span><span class="hop-type">Gateway local</span></div>
+      <div class="hop-row hop-intern" style="animation-delay:.1s"><span class="hop-num">2</span><div class="hop-line"></div><div class="hop-dot"></div><span class="hop-ip">10.86.0.1</span><span class="hop-ms">~16.9 ms</span><span class="hop-type">Red interna ISP</span></div>
+      <div class="hop-row hop-intern" style="animation-delay:.15s"><span class="hop-num">3</span><div class="hop-line"></div><div class="hop-dot"></div><span class="hop-ip">10.10.7.5</span><span class="hop-ms">~17.1 ms</span><span class="hop-type">Red interna ISP</span></div>
+      <div class="hop-row hop-intern" style="animation-delay:.2s"><span class="hop-num">4</span><div class="hop-line"></div><div class="hop-dot"></div><span class="hop-ip">10.10.7.6</span><span class="hop-ms">~17.0 ms</span><span class="hop-type">Red interna ISP</span></div>
+      <div class="hop-row hop-extern" style="animation-delay:.25s"><span class="hop-num">5</span><div class="hop-line"></div><div class="hop-dot"></div><span class="hop-ip">38.253.184.202</span><span class="hop-ms">~16.9 ms</span><span class="hop-type">Tránsito externo</span></div>
+      <div class="hop-row hop-extern" style="animation-delay:.3s"><span class="hop-num">6</span><div class="hop-line"></div><div class="hop-dot"></div><span class="hop-ip">181.177.224.6</span><span class="hop-ms">~6.7 ms</span><span class="hop-type">Movistar Perú</span></div>
+      <div class="hop-row hop-extern" style="animation-delay:.35s"><span class="hop-num">7</span><div class="hop-line"></div><div class="hop-dot"></div><span class="hop-ip">45.5.68.100</span><span class="hop-ms">~8.0 ms</span><span class="hop-type">Tránsito</span></div>
+      <div class="hop-row hop-extern" style="animation-delay:.4s"><span class="hop-num">8</span><div class="hop-line"></div><div class="hop-dot"></div><span class="hop-ip">45.183.47.211</span><span class="hop-ms">~8.7 ms</span><span class="hop-type">Tránsito</span></div>
+      <div class="hop-row hop-extern" style="animation-delay:.45s"><span class="hop-num">9</span><div class="hop-line"></div><div class="hop-dot"></div><span class="hop-ip">190.242.170.23</span><span class="hop-ms">~10.5 ms</span><span class="hop-type">Backbone PE</span></div>
+      <div class="hop-row hop-extern" style="animation-delay:.5s"><span class="hop-num">10</span><div class="hop-line"></div><div class="hop-dot"></div><span class="hop-ip">181.176.250.85</span><span class="hop-ms">~10.6 ms</span><span class="hop-type">Movistar PE</span></div>
+      <div class="hop-row hop-extern" style="animation-delay:.55s"><span class="hop-num">11</span><div class="hop-line"></div><div class="hop-dot"></div><span class="hop-ip">181.176.171.49</span><span class="hop-ms">~10.3 ms</span><span class="hop-type">Movistar PE</span></div>
+      <div class="hop-row hop-dest"   style="animation-delay:.6s"><span class="hop-num">12</span><div class="hop-line"></div><div class="hop-dot"></div><span class="hop-ip">181.176.32.82</span><span class="hop-ms">~10.6 ms</span><span class="hop-type">🎯 DESTINO</span></div>
+    </div>
+  </section>
+
+  <!-- 4. CONEXIONES -->
+  <section id="conexiones">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2>Estado de Conexiones — ss / netstat</h2>
+    </div>
+    <p style="color:var(--muted);margin-bottom:1rem;font-size:.85rem">
+      Se listan las conexiones TCP/UDP activas del sistema para verificar el estado de red en el momento del diagnóstico.
+    </p>
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+        <span class="terminal-title">ss -tunap / netstat -an</span>
+      </div>
+      <div class="terminal-body">
+        <span class="t-prompt">\DevPass ~/Documentos $</span> <span class="t-cmd">ss -tunap</span><br>
+        <span class="t-out">Netid  State   Recv-Q  Send-Q  Local Address:Port  Peer Address:Port  Process</span><br>
+        <span class="t-out">tcp    LISTEN  0       128     </span><span class="t-ip">0.0.0.0:22</span><span class="t-out">         0.0.0.0:*</span><br>
+        <span class="t-out">tcp    ESTAB   0       0       </span><span class="t-ip">192.168.18.206:54462</span><span class="t-out">  </span><span class="t-ok">64.233.186.95:443</span>
+        <span class="t-out">  users:(("firefox-esr",pid=3809))</span><br>
+        <span class="t-out">tcp    ESTAB   0       0       </span><span class="t-ip">192.168.18.206:49648</span><span class="t-out">  </span><span class="t-ok">157.240.197.60:443</span><br>
+        <span class="t-out">tcp    ESTAB   0       0       </span><span class="t-ip">192.168.18.206:52438</span><span class="t-out">  </span><span class="t-ok">157.240.197.60:443</span><br>
+        <span class="t-out">tcp    ESTAB   0       0       </span><span class="t-ip">192.168.18.206:45646</span><span class="t-out">  </span><span class="t-ok">34.107.243.93:443</span><br>
+        <span class="t-prompt">\DevPass ~/Documentos $</span> <span class="t-cmd">netstat -an</span><br>
+        <span class="t-out">Active Internet connections (servers and established)</span><br>
+        <span class="t-out">Proto Recv-Q Send-Q Local Address      Foreign Address    State</span><br>
+        <span class="t-out">tcp        0      0 0.0.0.0:22         0.0.0.0:*          </span><span class="t-ok">LISTEN</span><br>
+        <span class="t-out">tcp        0      0 192.168.18.206:...  64.233.186.95:443  </span><span class="t-ok">ESTABLISHED</span><br>
+        <span class="t-out">...</span><br>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. SCRIPT -->
+  <section id="script">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <h2>Script de Automatización — Bash</h2>
+    </div>
+    <p style="color:var(--muted);margin-bottom:1rem;font-size:.85rem">
+      Se creó un script Bash que automatiza todas las pruebas y genera el archivo <code style="color:var(--yellow)">reporte_red.txt</code> con los resultados.
+    </p>
+    <div class="code-file">
+      <div class="code-file-header">
+        <span class="code-file-name">📄 automatizacion.bash</span>
+        <span class="code-file-lang">bash · 587 bytes · chmod +x</span>
+      </div>
+      <pre><span class="cm">#!/bin/bash</span>
+<span class="cm"># Script de diagnóstico de red para SIGESAPOL</span>
+
+<span class="kw">echo</span> <span class="str">"=== INICIANDO PRUEBAS DE RED SIGESAPOL ==="</span> <span class="op">></span> reporte_red.txt
+
+<span class="kw">echo</span> -e <span class="str">"\n[1] RESOLUCIÓN DNS:"</span> <span class="op">>></span> reporte_red.txt
+<span class="fn">nslookup</span> sigesapol.dirsapolpnp.gob.pe <span class="op">>></span> reporte_red.txt
+
+<span class="kw">echo</span> -e <span class="str">"\n[2] PRUEBA DE CONECTIVIDAD (PING):"</span> <span class="op">>></span> reporte_red.txt
+<span class="fn">ping</span> -c 4 sigesapol.dirsapolpnp.gob.pe <span class="op">>></span> reporte_red.txt
+
+<span class="kw">echo</span> -e <span class="str">"\n[3] TRAZA DE RUTA (TRACEROUTE):"</span> <span class="op">>></span> reporte_red.txt
+<span class="fn">traceroute</span> sigesapol.dirsapolpnp.gob.pe <span class="op">>></span> reporte_red.txt
+
+<span class="kw">echo</span> <span class="str">"=== PRUEBAS FINALIZADAS ==="</span> <span class="op">>></span> reporte_red.txt
+<span class="kw">echo</span> <span class="str">"Resultados guardados en reporte_red.txt"</span></pre>
+    </div>
+    <div class="terminal" style="margin-top:1rem">
+      <div class="terminal-bar">
+        <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+        <span class="terminal-title">Ejecución del script</span>
+      </div>
+      <div class="terminal-body">
+        <span class="t-prompt">\DevPass ~/Documentos $</span> <span class="t-cmd">touch automatizacion.bash</span><br>
+        <span class="t-prompt">\DevPass ~/Documentos $</span> <span class="t-cmd">nano automatizacion.bash</span><br>
+        <span class="t-out">[Se escribe el script en el editor nano]</span><br>
+        <span class="t-prompt">\DevPass ~/Documentos $</span> <span class="t-cmd">chmod +x automatizacion.bash</span><br>
+        <span class="t-prompt">\DevPass ~/Documentos $</span> <span class="t-cmd">./automatizacion.bash</span><br>
+        <span class="t-ok">Resultados guardados en reporte_red.txt</span><br>
+        <span class="t-prompt">\DevPass ~/Documentos $</span> <span class="t-cmd">ls -l</span><br>
+        <span class="t-out">total 8</span><br>
+        <span class="t-ok">-rwxrwxr-x</span> <span class="t-out">1 jefdebian jefdebian  587 may 24 18:07 </span><span class="t-ok">automatizacion.bash</span><br>
+        <span class="t-out">-rw-rw-r--</span> <span class="t-out">1 jefdebian jefdebian 1670 may 24 18:08 reporte_red.txt</span><br>
+        <span class="cursor"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. EVIDENCIAS -->
+  <section id="evidencias">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <h2>Evidencias de Terminal</h2>
+    </div>
+    <p style="color:var(--muted);margin-bottom:1.2rem;font-size:.85rem">
+      Capturas de pantalla del proceso completo ejecutado en Debian 13 Trixie. Click en cada imagen para ampliar.
+    </p>
+    <div class="evidence-grid">
+      <div class="evidence-card" onclick="openLightbox('img/01_instalacion_herramientas.jpeg')">
+        <img class="evidence-img" src="img/01_instalacion_herramientas.jpeg" alt="Instalación de herramientas" />
+        <div class="evidence-meta">
+          <div class="evidence-cmd">$ sudo apt install net-tools traceroute dnsutils</div>
+          <div class="evidence-desc">Instalación de herramientas de red necesarias</div>
+        </div>
+      </div>
+      <div class="evidence-card" onclick="openLightbox('img/02_dns_nslookup.jpeg')">
+        <img class="evidence-img" src="img/02_dns_nslookup.jpeg" alt="Resolución DNS" />
+        <div class="evidence-meta">
+          <div class="evidence-cmd">$ nslookup sigesapol.dirsapolpnp.gob.pe</div>
+          <div class="evidence-desc">Resolución DNS exitosa → 181.176.32.82</div>
+        </div>
+      </div>
+      <div class="evidence-card" onclick="openLightbox('img/03_ping_conectividad.jpeg')">
+        <img class="evidence-img" src="img/03_ping_conectividad.jpeg" alt="Ping" />
+        <div class="evidence-meta">
+          <div class="evidence-cmd">$ ping -c 4 sigesapol.dirsapolpnp.gob.pe</div>
+          <div class="evidence-desc">0% packet loss · avg 6.1ms</div>
+        </div>
+      </div>
+      <div class="evidence-card" onclick="openLightbox('img/04_traceroute.jpeg')">
+        <img class="evidence-img" src="img/04_traceroute.jpeg" alt="Traceroute" />
+        <div class="evidence-meta">
+          <div class="evidence-cmd">$ traceroute sigesapol.dirsapolpnp.gob.pe</div>
+          <div class="evidence-desc">12 saltos hasta el destino</div>
+        </div>
+      </div>
+      <div class="evidence-card" onclick="openLightbox('img/05_ss_tunap.jpeg')">
+        <img class="evidence-img" src="img/05_ss_tunap.jpeg" alt="ss -tunap" />
+        <div class="evidence-meta">
+          <div class="evidence-cmd">$ ss -tunap</div>
+          <div class="evidence-desc">Conexiones TCP/UDP activas del sistema</div>
+        </div>
+      </div>
+      <div class="evidence-card" onclick="openLightbox('img/06_netstat_an.jpeg')">
+        <img class="evidence-img" src="img/06_netstat_an.jpeg" alt="netstat" />
+        <div class="evidence-meta">
+          <div class="evidence-cmd">$ netstat -an</div>
+          <div class="evidence-desc">Estado completo de conexiones de red</div>
+        </div>
+      </div>
+      <div class="evidence-card" onclick="openLightbox('img/10_script_nano.jpeg')">
+        <img class="evidence-img" src="img/10_script_nano.jpeg" alt="Script en nano" />
+        <div class="evidence-meta">
+          <div class="evidence-cmd">$ nano automatizacion.bash</div>
+          <div class="evidence-desc">Edición del script en el editor nano</div>
+        </div>
+      </div>
+      <div class="evidence-card" onclick="openLightbox('img/11_ejecucion_script.jpeg')">
+        <img class="evidence-img" src="img/11_ejecucion_script.jpeg" alt="Ejecución del script" />
+        <div class="evidence-meta">
+          <div class="evidence-cmd">$ ./automatizacion.bash</div>
+          <div class="evidence-desc">Ejecución y generación del reporte</div>
+        </div>
+      </div>
+      <div class="evidence-card" onclick="openLightbox('img/12_reporte_parte1.jpeg')">
+        <img class="evidence-img" src="img/12_reporte_parte1.jpeg" alt="Reporte parte 1" />
+        <div class="evidence-meta">
+          <div class="evidence-cmd">$ cat reporte_red.txt</div>
+          <div class="evidence-desc">Contenido del reporte generado (parte 1)</div>
+        </div>
+      </div>
+      <div class="evidence-card" onclick="openLightbox('img/13_reporte_parte2.jpeg')">
+        <img class="evidence-img" src="img/13_reporte_parte2.jpeg" alt="Reporte parte 2" />
+        <div class="evidence-meta">
+          <div class="evidence-cmd">$ cat reporte_red.txt (cont.)</div>
+          <div class="evidence-desc">Traceroute completo en el reporte</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. REPORTE TXT -->
+  <section id="reporte">
+    <div class="section-header">
+      <span class="section-num">07</span>
+      <h2>Reporte Generado — reporte_red.txt</h2>
+    </div>
+    <p style="color:var(--muted);margin-bottom:1rem;font-size:.85rem">
+      Archivo de texto plano generado automáticamente por el script. Contiene todos los resultados del diagnóstico.
+    </p>
+    <div class="code-file">
+      <div class="code-file-header">
+        <span class="code-file-name">📄 reporte_red.txt</span>
+        <span class="code-file-lang">text · 1670 bytes · generado 24/05/2026 18:08</span>
+      </div>
+      <pre style="color:var(--muted);">=== INICIANDO PRUEBAS DE RED SIGESAPOL ===
+
+<span style="color:var(--cyan)">[1] RESOLUCIÓN DNS:</span>
+Server:         192.168.18.1
+Address:        192.168.18.1#53
+
+Non-authoritative answer:
+Name:   sigesapol.dirsapolpnp.gob.pe
+Address: <span style="color:var(--green)">181.176.32.82</span>
+
+<span style="color:var(--cyan)">[2] PRUEBA DE CONECTIVIDAD (PING):</span>
+PING sigesapol.dirsapolpnp.gob.pe (181.176.32.82) 56(84) bytes of data.
+64 bytes from 181.176.32.82: icmp_seq=1 ttl=242 time=<span style="color:var(--yellow)">15.5 ms</span>
+64 bytes from 181.176.32.82: icmp_seq=2 ttl=242 time=<span style="color:var(--yellow)">5.27 ms</span>
+64 bytes from 181.176.32.82: icmp_seq=3 ttl=242 time=<span style="color:var(--yellow)">5.00 ms</span>
+64 bytes from 181.176.32.82: icmp_seq=4 ttl=242 time=<span style="color:var(--yellow)">5.85 ms</span>
+
+--- sigesapol.dirsapolpnp.gob.pe ping statistics ---
+4 packets transmitted, 4 received, <span style="color:var(--green)">0% packet loss</span>, time 3004ms
+rtt min/avg/max/mdev = <span style="color:var(--green)">5.003/7.907/15.502/4.395 ms</span>
+
+<span style="color:var(--cyan)">[3] TRAZA DE RUTA (TRACEROUTE):</span>
+traceroute to sigesapol.dirsapolpnp.gob.pe (181.176.32.82), 30 hops max
+ 1  _gateway (192.168.18.1)   13.139 ms  13.097 ms  13.182 ms
+ 2  10.86.0.1 (10.86.0.1)     16.787 ms  16.807 ms  17.173 ms
+ 3  10.10.7.5 (10.10.7.5)     17.097 ms  17.090 ms  17.081 ms
+ 4  10.10.7.6 (10.10.7.6)     17.009 ms  16.998 ms  16.968 ms
+ 5  38.253.184.202             16.938 ms  16.909 ms  16.878 ms
+ 6  181.177.224.6              16.800 ms   6.749 ms   6.675 ms
+ 7  45.5.68.100                 8.027 ms  12.023 ms  12.621 ms
+ 8  45.183.47.211               8.698 ms   8.815 ms   8.555 ms
+ 9  190.242.170.23             10.543 ms  10.359 ms  10.814 ms
+10  181.176.250.85             10.661 ms  10.599 ms  10.477 ms
+11  181.176.171.49             10.317 ms  10.349 ms  10.284 ms
+12  <span style="color:var(--green)">181.176.32.82              10.622 ms  10.714 ms  10.453 ms</span>
+<span style="color:var(--green)">=== PRUEBAS FINALIZADAS ===</span></pre>
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <p>
+    Diagnóstico de Red · SIGESAPOL · DIRSAPOL PNP<br>
+    Ejecutado en <strong style="color:var(--debian-red)">Debian GNU/Linux 13 "Trixie"</strong> · 24 de mayo 2026<br>
+    Usuario: <span style="color:var(--green)">\DevPass @ jefdebian</span> ·
+    <a href="automatizacion.bash">Ver script</a> ·
+    <a href="reporte_red.txt">Ver reporte</a>
+  </p>
+</footer>
+
+<script>
+  function openLightbox(src) {
+    document.getElementById('lightbox-img').src = src;
+    document.getElementById('lightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  document.getElementById('lightbox').addEventListener('click', function(e) {
+    if (e.target === this) closeLightbox();
+  });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+</script>
+</body>
+</html>
