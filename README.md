@@ -1,16 +1,64 @@
-# 🔍 Diagnóstico de Red — SIGESAPOL
+# 🔍 Auditoría de Conectividad y Diagnóstico de Red — Sistema SIGESAPOL
 
-> Análisis completo de conectividad hacia `sigesapol.dirsapolpnp.gob.pe` ejecutado en **Debian GNU/Linux 13 "Trixie"**
+> Documentación técnica, scripts de automatización y evidencias de conectividad web y de red orientadas al sistema **SIGESAPOL** de la Policía Nacional del Perú (PNP), ejecutadas desde un entorno controlado utilizando **Debian 13 "Trixie" (Linux)**.
+
+El objetivo principal es diagnosticar el estado del enlace, la resolución de nombres de dominio (DNS), el enrutamiento de paquetes y la seguridad en el transporte de datos (HTTPS) hacia los servidores del sistema institucional.
 
 ---
 
-## 📁 Estructura del Proyecto
+## 🛠️ Herramientas y Requisitos Utilizados
+
+Para la ejecución de las pruebas y auditorías locales se requiere un sistema basado en Linux Debian con las siguientes utilidades de red instaladas:
+
+| Paquete | Uso |
+|---------|-----|
+| `dnsutils` | Resolución y consultas DNS (`nslookup`) |
+| `iputils-ping` | Verificación de conectividad básica (`ping`) |
+| `traceroute` | Análisis de saltos de red intermedios |
+| `net-tools / iproute2` | Monitoreo de sockets y conexiones activas (`netstat`, `ss`) |
+| Navegador Web | Chrome / Firefox para validación de certificado HTTPS |
+
+---
+
+## 🚀 Guía de Ejecución Rápida
+
+### 1. Instalación de dependencias
+
+```bash
+sudo apt update && sudo apt install net-tools traceroute dnsutils -y
+```
+
+### 2. Ejecución del Script de Automatización
+
+```bash
+chmod +x diagnostico_red.sh
+./diagnostico_red.sh
+```
+
+Esto ejecuta todas las pruebas en un solo paso y exporta los resultados a `reporte_red.txt`.
+
+---
+
+## 📊 Matriz de Actividades Técnicas Evaluadas
+
+| # | Actividad | Herramienta | Resultado |
+|---|-----------|-------------|-----------|
+| 1 | **Resolución DNS** | `nslookup` | ✅ `181.176.32.82` |
+| 2 | **Prueba de Conectividad (Ping)** | `ping -c 4` | ✅ 0% packet loss · avg 7.9 ms |
+| 3 | **Traza de Ruta (Traceroute)** | `traceroute` | ✅ 12 saltos hasta destino |
+| 4 | **Inspección de Conexiones Activas** | `ss -tunap` / `netstat -an` | ✅ Sockets verificados |
+| 5 | **Acceso Seguro Web (HTTPS)** | Firefox / Chrome | ✅ Certificado SSL/TLS válido |
+| 6 | **Rendimiento de Backend** | Navegador | ✅ Descarga de reportes Excel |
+
+---
+
+## 📁 Estructura del Repositorio
 
 ```
 sigesapol-diagnostico/
-├── index.html              ← Página web del informe
-├── automatizacion.bash     ← Script de diagnóstico automatizado
-├── reporte_red.txt         ← Reporte generado por el script
+├── index.html              ← Página web del informe técnico
+├── diagnostico_red.sh      ← Script Bash de automatización
+├── reporte_red.txt         ← Log generado automáticamente por el script
 ├── README.md               ← Este archivo
 └── img/
     ├── 01_instalacion_herramientas.jpeg
@@ -28,54 +76,31 @@ sigesapol-diagnostico/
     └── 13_reporte_parte2.jpeg
 ```
 
----
-
-## 🧪 Pruebas Realizadas
-
-| # | Herramienta | Comando | Resultado |
-|---|-------------|---------|-----------|
-| 1 | nslookup | `nslookup sigesapol.dirsapolpnp.gob.pe` | ✅ IP: 181.176.32.82 |
-| 2 | ping | `ping -c 4 sigesapol.dirsapolpnp.gob.pe` | ✅ 0% packet loss |
-| 3 | traceroute | `traceroute sigesapol.dirsapolpnp.gob.pe` | ✅ 12 hops |
-| 4 | ss | `ss -tunap` | ✅ Conexiones activas |
-| 5 | netstat | `netstat -an` | ✅ Estado de red |
+- **`/img/`** — Capturas de pantalla organizadas como evidencia digital del informe técnico.
+- **`diagnostico_red.sh`** — Script en Bash que automatiza el proceso de recolección de métricas de red.
+- **`reporte_red.txt`** — Archivo de salida generado automáticamente tras las pruebas.
+- **`README.md`** — Presentación general y manual del proyecto (este archivo).
 
 ---
 
-## 📊 Resultados Clave
+## 📈 Resultados Clave
 
 - **DNS:** `sigesapol.dirsapolpnp.gob.pe` → `181.176.32.82`
-- **Ping:** 4/4 paquetes · 0% pérdida · avg **7.9 ms**
-- **Traceroute:** 12 saltos (Gateway → Movistar PE → Destino)
-- **TTL observado:** 242
+- **Ping:** 4/4 paquetes · 0% pérdida · avg **7.9 ms** · TTL 242
+- **Traceroute:** 12 saltos (Gateway → Red ISP → Movistar PE → Destino)
+- **HTTPS:** Certificado SSL/TLS válido confirmado visualmente en navegador
 
 ---
 
-## 🚀 Cómo usar el script
+## 💻 Entorno de Ejecución
 
-```bash
-# Instalar dependencias
-sudo apt install net-tools traceroute dnsutils -y
-
-# Dar permisos de ejecución
-chmod +x automatizacion.bash
-
-# Ejecutar
-./automatizacion.bash
-
-# Ver resultados
-cat reporte_red.txt
-```
-
----
-
-## 💻 Entorno
-
-- **OS:** Debian GNU/Linux 13 "Trixie"
-- **Kernel:** 6.12.86+deb13-amd64
-- **Shell:** bash
-- **Usuario:** `\DevPass @ jefdebian`
-- **Fecha:** 24 de mayo 2026
+| Campo | Valor |
+|-------|-------|
+| **OS** | Debian GNU/Linux 13 "Trixie" |
+| **Kernel** | 6.12.86+deb13-amd64 |
+| **Shell** | bash |
+| **Usuario** | `\DevPass @ jefdebian` |
+| **Fecha** | 24 de mayo 2026 |
 
 ---
 
