@@ -1231,6 +1231,43 @@ traceroute to sigesapol.dirsapolpnp.gob.pe (181.176.32.82), 30 hops max
     if (e.target === this) closeLightbox();
   });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+  // ========== MODO OSCURO / CLARO ==========
+(function() {
+  const toggleBtn = document.getElementById('theme-toggle');
+  
+  // Recuperar preferencia guardada o detectar preferencia del sistema
+  const savedTheme = localStorage.getItem('theme');
+  const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  
+  let currentTheme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
+  
+  // Aplicar tema inicial
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    if (toggleBtn) {
+      toggleBtn.innerHTML = theme === 'dark' ? '☀️ Modo claro' : '🌙 Modo oscuro';
+    }
+    localStorage.setItem('theme', theme);
+  }
+  
+  // Toggle al hacer clic
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', () => {
+      const newTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      applyTheme(newTheme);
+    });
+  }
+  
+  // Aplicar tema inicial
+  applyTheme(currentTheme);
+  
+  // Escuchar cambios de preferencia del sistema
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    if (!localStorage.getItem('theme')) {
+      applyTheme(e.matches ? 'dark' : 'light');
+    }
+  });
+})();
 </script>
 </body>
 </html>
