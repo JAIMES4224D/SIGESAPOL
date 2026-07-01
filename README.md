@@ -3,7 +3,7 @@
 # 🔍 Auditoría de Conectividad y Diagnóstico de Red
 ## Sistema SIGESAPOL · Policía Nacional del Perú
 
-<img src="img/logo-debian.png" width="110">
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Debian-OpenLogo.svg/960px-Debian-OpenLogo.svg.png" width="110">
 
 ### Documentación Técnica • Software Distribuido • Debian GNU/Linux 13 "Trixie"
 
