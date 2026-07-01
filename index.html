@@ -33,7 +33,7 @@
       --cyan:       #0366d6;
       --yellow:     #e36209;
       --red:        #d73a49;
-      --purple:     #6f42c1;
+      --purple:      #6f42c1;
       --white:      #24292f;
       --muted:      #57606a;
       --debian-red: #b80358;
@@ -179,6 +179,13 @@
       white-space: nowrap;
     }
     nav a:hover { color: var(--green); }
+    nav .simulador-link {
+      color: var(--cyan);
+      font-weight: 500;
+    }
+    nav .simulador-link:hover {
+      color: var(--green);
+    }
     main {
       max-width: 900px;
       margin: 0 auto;
@@ -441,10 +448,45 @@
       animation: blink 1s step-end infinite;
       margin-left: 2px;
     }
+    .header-buttons {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .btn-outline {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      color: var(--white);
+      border-radius: 30px;
+      padding: 0.4rem 0.9rem;
+      cursor: pointer;
+      font-size: 0.75rem;
+      font-family: monospace;
+      text-decoration: none;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .btn-outline:hover {
+      border-color: var(--green);
+      color: var(--green);
+      background: rgba(168,255,120,.05);
+    }
+    .btn-outline.primary {
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+    .btn-outline.primary:hover {
+      border-color: var(--green);
+      color: var(--green);
+    }
     @media (max-width: 600px) {
       header, main { padding-left: 1rem; padding-right: 1rem; }
       .evidence-grid { grid-template-columns: 1fr; }
       .result-grid   { grid-template-columns: 1fr 1fr; }
+      .header-buttons { justify-content: flex-start; margin-top: 0.5rem; }
     }
   </style>
 </head>
@@ -482,10 +524,9 @@
       <span class="tag tag-green">✓ HTTPS Apache/OpenSSL</span>
       <span class="tag tag-red">SIGESAPOL · PNP</span>
     </div>
-    <div style="position: absolute; top: 1rem; right: 1rem; z-index: 10;">
-      <button id="theme-toggle" style="background: var(--bg3); border: 1px solid var(--border); color: var(--white); border-radius: 30px; padding: 0.4rem 0.9rem; cursor: pointer; font-size: 0.75rem; font-family: monospace; transition: all 0.2s;">
-        🌙 Modo oscuro
-      </button>
+    <div style="position: absolute; top: 1rem; right: 1rem; z-index: 10;" class="header-buttons">
+      <a href="https://jaimes4224d.github.io/sigesapol-simulator/" target="_blank" class="btn-outline primary">🚀 Simulador</a>
+      <button id="theme-toggle" class="btn-outline">🌙 Modo oscuro</button>
     </div>
   </div>
 </header>
@@ -506,6 +547,7 @@
     <li><a href="#evidencias">Evidencias</a></li>
     <li><a href="#reporte">Reporte</a></li>
     <li><a href="#arquitectura">Arquitectura</a></li>
+    <li><a href="https://jaimes4224d.github.io/sigesapol-simulator/" target="_blank" class="simulador-link">⚡ Simulador</a></li>
   </ul>
 </nav>
 
@@ -1223,7 +1265,8 @@ traceroute to sigesapol.dirsapolpnp.gob.pe (181.176.32.82), 30 hops max
     Proyecto Integrador · Software Distribuido · IS8N1 · UPNW ·
     <span style="color:var(--green)">Docente: Ronald M. Serrano Hernandez</span><br>
     <a href="diagnostico_red.sh">Ver script</a> ·
-    <a href="reporte_red.txt">Ver reporte</a>
+    <a href="reporte_red.txt">Ver reporte</a> ·
+    <a href="https://jaimes4224d.github.io/sigesapol-simulator/" target="_blank">Simulador</a>
   </p>
 </footer>
 
