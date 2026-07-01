@@ -7,50 +7,42 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.35em' font-size='80'%3E🖧%3C/text%3E%3C/svg%3E">
-  
   <style>
     :root {
-  --bg:         #0d1117;
-  --bg2:        #161b22;
-  --bg3:        #1c2128;
-  --border:     #30363d;
-  --green:      #a8ff78;
-  --green-dim:  #4caf50;
-  --cyan:       #79c0ff;
-  --yellow:     #e3b341;
-  --red:        #ff7b72;
-  --purple:     #d2a8ff;
-  --white:      #e6edf3;
-  --muted:      #848d97;
-  --debian-red: #d70751;
-}
-
-/* MODO CLARO */
-[data-theme="light"] {
-  --bg:         #f6f8fa;
-  --bg2:        #ffffff;
-  --bg3:        #eaeef2;
-  --border:     #d0d7de;
-  --green:      #2c974b;
-  --green-dim:  #22863a;
-  --cyan:       #0366d6;
-  --yellow:     #e36209;
-  --red:        #d73a49;
-  --purple:     #6f42c1;
-  --white:      #24292f;
-  --muted:      #57606a;
-  --debian-red: #b80358;
-}
-
-/* Modo oscuro por defecto */
-html {
-  transition: background-color 0.3s ease, color 0.2s ease;
-}
-
+      --bg:         #0d1117;
+      --bg2:        #161b22;
+      --bg3:        #1c2128;
+      --border:     #30363d;
+      --green:      #a8ff78;
+      --green-dim:  #4caf50;
+      --cyan:       #79c0ff;
+      --yellow:     #e3b341;
+      --red:        #ff7b72;
+      --purple:     #d2a8ff;
+      --white:      #e6edf3;
+      --muted:      #848d97;
+      --debian-red: #d70751;
+    }
+    [data-theme="light"] {
+      --bg:         #f6f8fa;
+      --bg2:        #ffffff;
+      --bg3:        #eaeef2;
+      --border:     #d0d7de;
+      --green:      #2c974b;
+      --green-dim:  #22863a;
+      --cyan:       #0366d6;
+      --yellow:     #e36209;
+      --red:        #d73a49;
+      --purple:     #6f42c1;
+      --white:      #24292f;
+      --muted:      #57606a;
+      --debian-red: #b80358;
+    }
+    html {
+      transition: background-color 0.3s ease, color 0.2s ease;
+    }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     html { scroll-behavior: smooth; }
-
     body {
       background: var(--bg);
       color: var(--white);
@@ -59,24 +51,14 @@ html {
       line-height: 1.7;
       overflow-x: hidden;
     }
-
-    /* ── SCANLINE OVERLAY ── */
     body::before {
       content: '';
       position: fixed;
       inset: 0;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(0,0,0,.08) 2px,
-        rgba(0,0,0,.08) 4px
-      );
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,.08) 2px, rgba(0,0,0,.08) 4px);
       pointer-events: none;
       z-index: 9999;
     }
-
-    /* ── HEADER / HERO ── */
     header {
       position: relative;
       padding: 3rem 2rem 2rem;
@@ -84,7 +66,6 @@ html {
       background: var(--bg2);
       overflow: hidden;
     }
-
     header::after {
       content: '';
       position: absolute;
@@ -92,14 +73,12 @@ html {
       background: radial-gradient(ellipse 60% 50% at 50% -10%, rgba(215,7,81,.18) 0%, transparent 70%);
       pointer-events: none;
     }
-
     .header-inner {
       max-width: 900px;
       margin: 0 auto;
       position: relative;
       z-index: 1;
     }
-
     .debian-badge {
       display: inline-flex;
       align-items: center;
@@ -115,7 +94,6 @@ html {
       margin-bottom: 1.2rem;
       animation: fadeUp .6s ease both;
     }
-
     .debian-logo {
       width: 16px; height: 16px;
       background: var(--debian-red);
@@ -131,7 +109,6 @@ html {
       border-radius: 50% 50% 50% 0;
       transform: rotate(-30deg);
     }
-
     .prompt-line {
       font-size: .85rem;
       color: var(--muted);
@@ -141,7 +118,6 @@ html {
     .prompt-line .user { color: var(--green); }
     .prompt-line .host { color: var(--cyan); }
     .prompt-line .path { color: var(--purple); }
-
     h1 {
       font-family: 'Space Mono', monospace;
       font-size: clamp(1.6rem, 4vw, 2.4rem);
@@ -152,14 +128,12 @@ html {
       animation: fadeUp .6s .15s ease both;
     }
     h1 span { color: var(--green); }
-
     .subtitle {
       color: var(--muted);
       font-size: .9rem;
       margin-bottom: 1.5rem;
       animation: fadeUp .6s .2s ease both;
     }
-
     .meta-tags {
       display: flex;
       flex-wrap: wrap;
@@ -177,8 +151,6 @@ html {
     .tag-cyan   { background: rgba(121,192,255,.1); border: 1px solid rgba(121,192,255,.3); color: var(--cyan); }
     .tag-yellow { background: rgba(227,179,65,.1);  border: 1px solid rgba(227,179,65,.3);  color: var(--yellow); }
     .tag-red    { background: rgba(215,7,81,.12);   border: 1px solid rgba(215,7,81,.4);    color: #ff6b9d; }
-
-    /* ── NAV ── */
     nav {
       position: sticky;
       top: 0;
@@ -207,16 +179,12 @@ html {
       white-space: nowrap;
     }
     nav a:hover { color: var(--green); }
-
-    /* ── MAIN CONTENT ── */
     main {
       max-width: 900px;
       margin: 0 auto;
       padding: 2.5rem 2rem 4rem;
     }
-
     section { margin-bottom: 3.5rem; }
-
     .section-header {
       display: flex;
       align-items: center;
@@ -239,8 +207,6 @@ html {
       font-weight: 700;
       color: var(--cyan);
     }
-
-    /* ── TERMINAL BLOCK ── */
     .terminal {
       background: #010409;
       border: 1px solid var(--border);
@@ -273,7 +239,6 @@ html {
       overflow-x: auto;
     }
     .terminal-body pre { white-space: pre-wrap; word-break: break-all; }
-
     .t-prompt { color: var(--green); }
     .t-cmd    { color: var(--white); }
     .t-out    { color: var(--muted); }
@@ -282,8 +247,6 @@ html {
     .t-hop    { color: var(--yellow); }
     .t-err    { color: var(--red); }
     .t-comment{ color: #6e7681; font-style: italic; }
-
-    /* ── RESULT CARDS ── */
     .result-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -313,8 +276,6 @@ html {
     .card-label { font-size: .7rem; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: .35rem; }
     .card-value { font-size: 1.05rem; color: var(--green); font-weight: 700; }
     .card-sub   { font-size: .75rem; color: var(--muted); margin-top: .15rem; }
-
-    /* ── EVIDENCE GALLERY ── */
     .evidence-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -356,8 +317,6 @@ html {
       font-size: .73rem;
       color: var(--muted);
     }
-
-    /* ── LIGHTBOX ── */
     #lightbox {
       display: none;
       position: fixed;
@@ -386,8 +345,6 @@ html {
       font-family: inherit;
     }
     #lightbox-close:hover { color: var(--white); }
-
-    /* ── CODE BLOCK ── */
     .code-file {
       background: #010409;
       border: 1px solid var(--border);
@@ -416,8 +373,6 @@ html {
     .str { color: #a5d6ff; }
     .cm  { color: #6e7681; font-style: italic; }
     .op  { color: var(--green); }
-
-    /* ── TRACEROUTE VIZ ── */
     .traceroute-viz {
       background: var(--bg2);
       border: 1px solid var(--border);
@@ -453,13 +408,10 @@ html {
     .hop-ip   { color: var(--cyan); min-width: 160px; }
     .hop-ms   { color: var(--green); font-size: .75rem; }
     .hop-type { font-size: .68rem; color: var(--muted); margin-left: auto; }
-
     .hop-local  .hop-dot { background: var(--yellow); }
     .hop-intern .hop-dot { background: var(--purple); }
     .hop-extern .hop-dot { background: var(--cyan); }
     .hop-dest   .hop-dot { background: var(--green); box-shadow: 0 0 8px var(--green); }
-
-    /* ── FOOTER ── */
     footer {
       border-top: 1px solid var(--border);
       padding: 2rem;
@@ -469,8 +421,6 @@ html {
     }
     footer a { color: var(--green); text-decoration: none; }
     footer a:hover { text-decoration: underline; }
-
-    /* ── ANIMATIONS ── */
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(12px); }
       to   { opacity: 1; transform: translateY(0); }
@@ -483,7 +433,6 @@ html {
       0%, 100% { opacity: 1; }
       50%       { opacity: 0; }
     }
-
     .cursor {
       display: inline-block;
       width: 8px; height: 1em;
@@ -492,8 +441,6 @@ html {
       animation: blink 1s step-end infinite;
       margin-left: 2px;
     }
-
-    /* ── RESPONSIVE ── */
     @media (max-width: 600px) {
       header, main { padding-left: 1rem; padding-right: 1rem; }
       .evidence-grid { grid-template-columns: 1fr; }
@@ -565,7 +512,7 @@ html {
 <!-- MAIN -->
 <main>
 
-  <!-- 0. RESUMEN -->
+  <!-- 00. RESUMEN -->
   <section id="resumen">
     <div class="section-header">
       <span class="section-num">00</span>
@@ -615,7 +562,7 @@ html {
     </div>
   </section>
 
-  <!-- 00b. EQUIPO -->
+  <!-- 01. EQUIPO -->
   <section id="equipo">
     <div class="section-header">
       <span class="section-num">01</span>
@@ -666,7 +613,7 @@ html {
     </div>
   </section>
 
-  <!-- 1. DNS -->
+  <!-- 02. DNS -->
   <section id="dns">
     <div class="section-header">
       <span class="section-num">02</span>
@@ -704,7 +651,7 @@ html {
     </div>
   </section>
 
-  <!-- 2. PING -->
+  <!-- 03. PING -->
   <section id="ping">
     <div class="section-header">
       <span class="section-num">03</span>
@@ -733,7 +680,7 @@ html {
     </div>
   </section>
 
-  <!-- 3. TRACEROUTE -->
+  <!-- 04. TRACEROUTE -->
   <section id="traceroute">
     <div class="section-header">
       <span class="section-num">04</span>
@@ -742,7 +689,6 @@ html {
     <p style="color:var(--muted);margin-bottom:1rem;font-size:.85rem">
       Se mapea el camino completo desde el equipo hasta el servidor, identificando cada router intermedio.
     </p>
-
     <div class="traceroute-viz">
       <div style="font-size:.72rem;color:var(--muted);margin-bottom:1rem;letter-spacing:.05em;text-transform:uppercase">
         Visualización de ruta · 12 saltos · Destino: 181.176.32.82
@@ -762,7 +708,7 @@ html {
     </div>
   </section>
 
-  <!-- 4. CONEXIONES -->
+  <!-- 05. CONEXIONES -->
   <section id="conexiones">
     <div class="section-header">
       <span class="section-num">05</span>
@@ -795,7 +741,194 @@ html {
     </div>
   </section>
 
-  <!-- 5. SCRIPT -->
+  <!-- 06. NMAP -->
+  <section id="nmap">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <h2>Escaneo de Puertos y OS — nmap</h2>
+    </div>
+    <p style="color:var(--muted);margin-bottom:1rem;font-size:.85rem">
+      Se ejecuta un escaneo avanzado SYN Stealth + UDP + detección de servicios y sistema operativo contra la IP del servidor SIGESAPOL. El análisis tardó <strong style="color:var(--yellow)">1369.64 segundos</strong> y reveló la presencia de un firewall/load balancer.
+    </p>
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+        <span class="terminal-title">debianjef@debianjef: ~</span>
+      </div>
+      <div class="terminal-body">
+        <span class="t-prompt">debianjef@debianjef:~$</span> <span class="t-cmd">sudo nmap -sS -sU -T4 -A -v -Pn 181.176.32.82</span><br>
+        <span class="t-out">Host discovery disabled (-Pn). All addresses will be marked 'up'</span><br>
+        <span class="t-out">Starting Nmap 7.95 ( https://nmap.org ) at 2026-06-08 22:00 -05</span><br>
+        <span class="t-out">NSE: Loaded 157 scripts for scanning.</span><br>
+        <span class="t-out">Initiating SYN Stealth Scan at 22:00 · Scanning </span><span class="t-ip">181.176.32.82</span><span class="t-out"> [1000 ports]</span><br>
+        <span class="t-out">Completed SYN Stealth Scan at 22:01, 101.20s elapsed (1000 total ports)</span><br>
+        <span class="t-out">Initiating UDP Scan at 22:01 · Completed UDP Scan at 22:03, 101.48s elapsed</span><br>
+        <span class="t-out">Initiating Service scan at 22:03 · Scanning 1000 services...</span><br>
+        <span class="t-out">Completed Service scan at 22:11, 467.70s elapsed</span><br>
+        <span class="t-out">Initiating OS detection (try #1) against </span><span class="t-ip">181.176.32.82</span><br>
+        <span class="t-out">Completed Traceroute at 22:11, 0.09s elapsed</span><br>
+        <br>
+        <span class="t-out">All 2000 scanned ports on 181.176.32.82 are in ignored states.</span><br>
+        <span class="t-out">Not shown: 1000 filtered tcp ports (no-response), 1000 open|filtered udp ports</span><br>
+        <span class="t-ok">Device type: firewall|load balancer</span><br>
+        <span class="t-ok">Running: F5 Networks embedded, F5 Networks TMOS 11.1.X|11.4.X|11.6.X|9.1.X</span><br>
+        <span class="t-out">OS CPE: cpe:/o:f5:tmos:11.1 cpe:/o:f5:tmos:11.4 cpe:/o:f5:tmos:11.6 cpe:/o:f5:tmos:9.1</span><br>
+        <span class="t-out">Network Distance: </span><span class="t-hop">13 hops</span><br>
+        <br>
+        <span class="t-out">TRACEROUTE (using proto 1/icmp)</span><br>
+        <span class="t-out">HOP  RTT      ADDRESS</span><br>
+        <span class="t-out"> 1   2.09 ms  </span><span class="t-ip">192.168.1.1</span><br>
+        <span class="t-out"> 2   8.28 ms  </span><span class="t-ip">192.168.18.1</span><br>
+        <span class="t-out"> 3   8.47 ms  </span><span class="t-ip">10.86.0.1</span><br>
+        <span class="t-out"> 4   12.55 ms </span><span class="t-ip">10.10.7.5</span><br>
+        <span class="t-out"> 5   7.80 ms  </span><span class="t-ip">10.10.7.6</span><br>
+        <span class="t-out"> 6   8.06 ms  </span><span class="t-ip">38.253.184.202</span><br>
+        <span class="t-out"> 7   8.01 ms  </span><span class="t-ip">181.177.224.6</span><br>
+        <span class="t-out"> 8   8.08 ms  </span><span class="t-ip">45.5.68.100</span><br>
+        <span class="t-out"> 9   90.44 ms </span><span class="t-ip">45.183.47.211</span><br>
+        <span class="t-out">10   63.26 ms </span><span class="t-ip">190.242.170.29</span><br>
+        <span class="t-out">11   10.49 ms </span><span class="t-ip">181.176.250.89</span><br>
+        <span class="t-out">12   10.64 ms </span><span class="t-ip">181.176.171.49</span><br>
+        <span class="t-ok">13   10.68 ms  181.176.32.82  🎯 DESTINO</span><br>
+        <br>
+        <span class="t-out">Nmap done: 1 IP address (1 host up) scanned in </span><span class="t-hop">1369.64 seconds</span><br>
+        <span class="t-out">Raw packets sent: 4119 (188.616KB) | Rcvd: 16 (1.122KB)</span><br>
+      </div>
+    </div>
+    <div class="result-grid" style="margin-top:1rem">
+      <div class="result-card">
+        <div class="card-label">Dispositivo detectado</div>
+        <div class="card-value" style="font-size:.9rem">Firewall / LB</div>
+        <div class="card-sub">F5 Networks TMOS</div>
+      </div>
+      <div class="result-card">
+        <div class="card-label">Puertos TCP abiertos</div>
+        <div class="card-value">0 visibles</div>
+        <div class="card-sub">1000 filtered (no-response)</div>
+      </div>
+      <div class="result-card">
+        <div class="card-label">Distancia de red</div>
+        <div class="card-value">13 hops</div>
+        <div class="card-sub">Nmap TRACEROUTE ICMP</div>
+      </div>
+      <div class="result-card">
+        <div class="card-label">Duración del scan</div>
+        <div class="card-value">1369 s</div>
+        <div class="card-sub">~22 minutos · T4 timing</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07. HTTPS -->
+  <section id="https">
+    <div class="section-header">
+      <span class="section-num">07</span>
+      <h2>Verificación HTTPS — curl</h2>
+    </div>
+    <p style="color:var(--muted);margin-bottom:1rem;font-size:.85rem">
+      Se verifica el certificado SSL/TLS y las cabeceras HTTP del servidor usando <code style="color:var(--yellow)">curl -k -I</code>. El servidor responde con <strong style="color:var(--green)">HTTP/1.1 302</strong> redirigiendo al login con Apache/OpenSSL y framework Laravel.
+    </p>
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+        <span class="terminal-title">debianjef@debianjef: ~</span>
+      </div>
+      <div class="terminal-body">
+        <span class="t-prompt">debianjef@debianjef:~$</span> <span class="t-cmd">curl -k -I https://sigesapol.dirsapolpnp.gob.pe</span><br>
+        <span class="t-ok">HTTP/1.1 302 Found</span><br>
+        <span class="t-out">Date: </span><span class="t-hop">Tue, 09 Jun 2026 02:50:40 GMT</span><br>
+        <span class="t-out">Server: </span><span class="t-ok">Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips</span><br>
+        <span class="t-out">Cache-Control: no-cache, max-age=0</span><br>
+        <span class="t-out">Location: </span><span class="t-ip">https://sigesapol.dirsapolpnp.gob.pe/auth/login</span><br>
+        <span class="t-out">Set-Cookie: XSRF-TOKEN=eyJpdiI... </span><span class="t-hop">(token Laravel)</span><br>
+        <span class="t-out">Set-Cookie: laravel_session=eyJpd... </span><span class="t-hop">httponly; Max-Age=2400; path=/</span><br>
+        <span class="t-out">Expires: Tue, 09 Jun 2026 02:50:40 GMT</span><br>
+        <span class="t-out">X-UA-Compatible: IE=edge</span><br>
+        <span class="t-out">X-Content-Type-Options: nosniff</span><br>
+        <span class="t-out">Content-Type: </span><span class="t-ok">text/html; charset=UTF-8</span><br>
+      </div>
+    </div>
+    <div class="result-grid" style="margin-top:1rem">
+      <div class="result-card">
+        <div class="card-label">Respuesta HTTP</div>
+        <div class="card-value">302 Found</div>
+        <div class="card-sub">Redirección a /auth/login</div>
+      </div>
+      <div class="result-card">
+        <div class="card-label">Servidor Web</div>
+        <div class="card-value" style="font-size:.85rem">Apache 2.4.6</div>
+        <div class="card-sub">Red Hat · OpenSSL 1.0.2k-fips</div>
+      </div>
+      <div class="result-card">
+        <div class="card-label">Framework</div>
+        <div class="card-value">Laravel</div>
+        <div class="card-sub">XSRF-TOKEN + laravel_session</div>
+      </div>
+      <div class="result-card">
+        <div class="card-label">Protocolo</div>
+        <div class="card-value" style="color:var(--green)">HTTPS ✓</div>
+        <div class="card-sub">SSL/TLS activo · OpenSSL FIPS</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 08. HTOP -->
+  <section id="htop">
+    <div class="section-header">
+      <span class="section-num">08</span>
+      <h2>Monitor de Procesos — htop</h2>
+    </div>
+    <p style="color:var(--muted);margin-bottom:1rem;font-size:.85rem">
+      Se monitorea el estado del sistema local durante la ejecución de las pruebas. Se observa el consumo de recursos en tiempo real con <code style="color:var(--yellow)">htop</code> mientras el navegador y el escaneo Nmap operan en paralelo.
+    </p>
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+        <span class="terminal-title">htop — debianjef@debianjef</span>
+      </div>
+      <div class="terminal-body">
+        <span class="t-out">CPU[0] ████████████████░░░░ </span><span class="t-hop">16.2%</span><span class="t-out">  Tasks: </span><span class="t-ok">124</span><span class="t-out">, 723 thr, 101 kthr; </span><span class="t-ok">1 running</span><br>
+        <span class="t-out">CPU[1] ████████████░░░░░░░░ </span><span class="t-hop">11.2%</span><span class="t-out">  Load average: </span><span class="t-hop">2.07  2.15  1.35</span><br>
+        <span class="t-out">CPU[2] ████████████████░░░░ </span><span class="t-hop">18.3%</span><span class="t-out">  Uptime: </span><span class="t-ok">00:11:19</span><br>
+        <span class="t-out">CPU[3] ████████████░░░░░░░░ </span><span class="t-hop">15.6%</span><br>
+        <span class="t-out">Mem[████████████████████░░░░░░░░░░] </span><span class="t-hop">2.58G</span><span class="t-out">/6.74G</span><br>
+        <span class="t-out">Swp[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] </span><span class="t-ok">0K</span><span class="t-out">/6.96G</span><br>
+        <br>
+        <span class="t-out">  PID USER     PRI NI  VIRT   RES SHR CPU% MEM%  TIME+  Command</span><br>
+        <span class="t-ok"> 3471 debianjef  20  0 26.5G 293M 101M 13.9  4.3  0:21  firefox-esr (contentproc)</span><br>
+        <span class="t-out"> 3906 debianjef  20  0 6848  5484 3072  7.7  0.1  0:00  htop</span><br>
+        <span class="t-out"> 1839 debianjef  20  0 1916M 108M 70388  6.2  1.6  0:21  Xorg vt2</span><br>
+        <span class="t-out"> 2063 debianjef  20  0 4752M 249M 130M   5.3  3.6  0:33  gnome-shell</span><br>
+        <span class="t-out"> 3541 debianjef  20  0 680M  50820 40320  4.3  0.7  0:04  gnome-terminal-server</span><br>
+        <span class="t-out"> 2705 debianjef  20  0 19.2G 437M 223M  2.4  6.3  0:34  firefox-esr</span><br>
+        <span class="t-out"> 3070 debianjef  20  0 11.5G 880M 120M  2.4 12.8  2:46  firefox-esr (contentproc)</span><br>
+      </div>
+    </div>
+    <div class="result-grid" style="margin-top:1rem">
+      <div class="result-card">
+        <div class="card-label">RAM usada</div>
+        <div class="card-value">2.58 GB</div>
+        <div class="card-sub">de 6.74 GB disponibles</div>
+      </div>
+      <div class="result-card">
+        <div class="card-label">Load average</div>
+        <div class="card-value">2.07</div>
+        <div class="card-sub">Nmap + Firefox activos</div>
+      </div>
+      <div class="result-card">
+        <div class="card-label">Procesos activos</div>
+        <div class="card-value">124</div>
+        <div class="card-sub">723 hilos · 1 running</div>
+      </div>
+      <div class="result-card">
+        <div class="card-label">Swap usado</div>
+        <div class="card-value" style="color:var(--green)">0 KB</div>
+        <div class="card-sub">RAM suficiente · sin paginación</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 09. SCRIPT -->
   <section id="script">
     <div class="section-header">
       <span class="section-num">09</span>
@@ -846,117 +979,11 @@ html {
       </div>
     </div>
   </section>
- <!--ARQUITECTURA -->
-  <!-- ========================================================= -->
-<!-- ARQUITECTURA DEL PROYECTO -->
-<!-- ========================================================= -->
 
-<section id="arquitectura">
-    <div class="section-header">
-        <span class="section-num">10</span>
-        <h2>Arquitectura del Sistema</h2>
-    </div>
-
-    <p style="color:var(--muted);margin-bottom:1.2rem;font-size:.85rem">
-        La siguiente arquitectura representa la distribución por capas del sistema
-        desarrollado. Se muestra el flujo de comunicación desde los usuarios hasta
-        la capa de datos, incluyendo los servicios transversales y los mecanismos
-        de monitoreo.
-    </p>
-
-    <div class="evidence-grid">
-
-        <div class="evidence-card" onclick="openLightbox('img/CAPA 1 USUARIOS CLIENTES.jpeg')">
-            <img class="evidence-img"
-                 src="img/CAPA 1 USUARIOS CLIENTES.jpeg"
-                 alt="Capa 1 Usuarios Clientes">
-            <div class="evidence-meta">
-                <div class="evidence-cmd">CAPA 1</div>
-                <div class="evidence-desc">
-                    Usuarios y clientes que interactúan con la plataforma.
-                </div>
-            </div>
-        </div>
-
-        <div class="evidence-card" onclick="openLightbox('img/CAPA 2 INTERNET.jpeg')">
-            <img class="evidence-img"
-                 src="img/CAPA 2 INTERNET.jpeg"
-                 alt="Capa 2 Internet">
-            <div class="evidence-meta">
-                <div class="evidence-cmd">CAPA 2</div>
-                <div class="evidence-desc">
-                    Comunicación mediante Internet y acceso a la plataforma.
-                </div>
-            </div>
-        </div>
-
-        <div class="evidence-card" onclick="openLightbox('img/CAPA 3 MONITOREO Y CAPTURA.jpeg')">
-            <img class="evidence-img"
-                 src="https://github.com/JAIMES4224D/SIGESAPOL/blob/main/img/CAPA%203%20MONITOREO%20Y%20CAPTURA%20LOCAL.jpeg?raw=true"
-                 alt="Capa 3 Monitoreo">
-            <div class="evidence-meta">
-                <div class="evidence-cmd">CAPA 3</div>
-                <div class="evidence-desc">
-                    Monitoreo, captura de información y supervisión del sistema.
-                </div>
-            </div>
-        </div>
-
-        <div class="evidence-card" onclick="openLightbox('img/CAPA 4 APLICACIONES.jpeg')">
-            <img class="evidence-img"
-                 src="img/CAPA 4 APLICACIONES.jpeg"
-                 alt="Capa 4 Aplicaciones">
-            <div class="evidence-meta">
-                <div class="evidence-cmd">CAPA 4</div>
-                <div class="evidence-desc">
-                    Servicios y aplicaciones que ejecutan la lógica del sistema.
-                </div>
-            </div>
-        </div>
-
-        <div class="evidence-card" onclick="openLightbox('img/CAPA DE DATOS (VISUALIZACION).jpeg')">
-            <img class="evidence-img"
-                 src="https://github.com/JAIMES4224D/SIGESAPOL/blob/main/img/CAPA%20DE%20DATOS%20(VIZUALIZACION%20FUNCIONAL).jpeg?raw=true"
-                 alt="Capa de Datos">
-            <div class="evidence-meta">
-                <div class="evidence-cmd">CAPA DE DATOS</div>
-                <div class="evidence-desc">
-                    Almacenamiento, procesamiento y visualización de la información.
-                </div>
-            </div>
-        </div>
-
-        <div class="evidence-card" onclick="openLightbox('img/CAPA 6 SALIDA Y SOPORTE.jpeg')">
-            <img class="evidence-img"
-                 src="img/CAPA 6 SALIDA Y SOPORTE.jpeg"
-                 alt="Capa 6">
-            <div class="evidence-meta">
-                <div class="evidence-cmd">CAPA 6</div>
-                <div class="evidence-desc">
-                    Salida de información, reportes y soporte operativo.
-                </div>
-            </div>
-        </div>
-
-        <div class="evidence-card" onclick="openLightbox('img/SERVICIO TRANVERSALES.jpeg')">
-            <img class="evidence-img"
-                 src="img/SERVICIO TRANVERSALES.jpeg"
-                 alt="Servicios Transversales">
-            <div class="evidence-meta">
-                <div class="evidence-cmd">SERVICIOS TRANSVERSALES</div>
-                <div class="evidence-desc">
-                    Componentes compartidos que brindan seguridad, autenticación,
-                    monitoreo y administración del sistema.
-                </div>
-            </div>
-        </div>
-
-    </div>
-</section>
-  <!-- 6. EVIDENCIAS -->
+  <!-- 10. EVIDENCIAS -->
   <section id="evidencias">
     <div class="section-header">
-      <span class="section-num">11</span>
+      <span class="section-num">10</span>
       <h2>Evidencias de Terminal</h2>
     </div>
     <p style="color:var(--muted);margin-bottom:1.2rem;font-size:.85rem">
@@ -1071,10 +1098,10 @@ html {
     </div>
   </section>
 
-  <!-- 7. REPORTE TXT -->
+  <!-- 11. REPORTE -->
   <section id="reporte">
     <div class="section-header">
-      <span class="section-num">12</span>
+      <span class="section-num">11</span>
       <h2>Reporte Generado — reporte_red.txt</h2>
     </div>
     <p style="color:var(--muted);margin-bottom:1rem;font-size:.85rem">
@@ -1124,189 +1151,64 @@ traceroute to sigesapol.dirsapolpnp.gob.pe (181.176.32.82), 30 hops max
     </div>
   </section>
 
-  <!-- 6. NMAP -->
-  <section id="nmap">
+  <!-- 12. ARQUITECTURA -->
+  <section id="arquitectura">
     <div class="section-header">
-      <span class="section-num">06</span>
-      <h2>Escaneo de Puertos y OS — nmap</h2>
+      <span class="section-num">12</span>
+      <h2>Arquitectura del Sistema</h2>
     </div>
-    <p style="color:var(--muted);margin-bottom:1rem;font-size:.85rem">
-      Se ejecuta un escaneo avanzado SYN Stealth + UDP + detección de servicios y sistema operativo contra la IP del servidor SIGESAPOL. El análisis tardó <strong style="color:var(--yellow)">1369.64 segundos</strong> y reveló la presencia de un firewall/load balancer.
+    <p style="color:var(--muted);margin-bottom:1.2rem;font-size:.85rem">
+      La siguiente arquitectura representa la distribución por capas del sistema desarrollado. Se muestra el flujo de comunicación desde los usuarios hasta la capa de datos, incluyendo los servicios transversales y los mecanismos de monitoreo.
     </p>
-    <div class="terminal">
-      <div class="terminal-bar">
-        <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
-        <span class="terminal-title">debianjef@debianjef: ~</span>
+    <div class="evidence-grid">
+      <div class="evidence-card" onclick="openLightbox('img/CAPA 1 USUARIOS CLIENTES.jpeg')">
+        <img class="evidence-img" src="img/CAPA 1 USUARIOS CLIENTES.jpeg" alt="Capa 1 Usuarios Clientes" />
+        <div class="evidence-meta">
+          <div class="evidence-cmd">CAPA 1</div>
+          <div class="evidence-desc">Usuarios y clientes que interactúan con la plataforma.</div>
+        </div>
       </div>
-      <div class="terminal-body">
-        <span class="t-prompt">debianjef@debianjef:~$</span> <span class="t-cmd">sudo nmap -sS -sU -T4 -A -v -Pn 181.176.32.82</span><br>
-        <span class="t-out">Host discovery disabled (-Pn). All addresses will be marked 'up'</span><br>
-        <span class="t-out">Starting Nmap 7.95 ( https://nmap.org ) at 2026-06-08 22:00 -05</span><br>
-        <span class="t-out">NSE: Loaded 157 scripts for scanning.</span><br>
-        <span class="t-out">Initiating SYN Stealth Scan at 22:00 · Scanning </span><span class="t-ip">181.176.32.82</span><span class="t-out"> [1000 ports]</span><br>
-        <span class="t-out">Completed SYN Stealth Scan at 22:01, 101.20s elapsed (1000 total ports)</span><br>
-        <span class="t-out">Initiating UDP Scan at 22:01 · Completed UDP Scan at 22:03, 101.48s elapsed</span><br>
-        <span class="t-out">Initiating Service scan at 22:03 · Scanning 1000 services...</span><br>
-        <span class="t-out">Completed Service scan at 22:11, 467.70s elapsed</span><br>
-        <span class="t-out">Initiating OS detection (try #1) against </span><span class="t-ip">181.176.32.82</span><br>
-        <span class="t-out">Completed Traceroute at 22:11, 0.09s elapsed</span><br>
-        <br>
-        <span class="t-out">All 2000 scanned ports on 181.176.32.82 are in ignored states.</span><br>
-        <span class="t-out">Not shown: 1000 filtered tcp ports (no-response), 1000 open|filtered udp ports</span><br>
-        <span class="t-ok">Device type: firewall|load balancer</span><br>
-        <span class="t-ok">Running: F5 Networks embedded, F5 Networks TMOS 11.1.X|11.4.X|11.6.X|9.1.X</span><br>
-        <span class="t-out">OS CPE: cpe:/o:f5:tmos:11.1 cpe:/o:f5:tmos:11.4 cpe:/o:f5:tmos:11.6 cpe:/o:f5:tmos:9.1</span><br>
-        <span class="t-out">Network Distance: </span><span class="t-hop">13 hops</span><br>
-        <br>
-        <span class="t-out">TRACEROUTE (using proto 1/icmp)</span><br>
-        <span class="t-out">HOP  RTT      ADDRESS</span><br>
-        <span class="t-out"> 1   2.09 ms  </span><span class="t-ip">192.168.1.1</span><br>
-        <span class="t-out"> 2   8.28 ms  </span><span class="t-ip">192.168.18.1</span><br>
-        <span class="t-out"> 3   8.47 ms  </span><span class="t-ip">10.86.0.1</span><br>
-        <span class="t-out"> 4   12.55 ms </span><span class="t-ip">10.10.7.5</span><br>
-        <span class="t-out"> 5   7.80 ms  </span><span class="t-ip">10.10.7.6</span><br>
-        <span class="t-out"> 6   8.06 ms  </span><span class="t-ip">38.253.184.202</span><br>
-        <span class="t-out"> 7   8.01 ms  </span><span class="t-ip">181.177.224.6</span><br>
-        <span class="t-out"> 8   8.08 ms  </span><span class="t-ip">45.5.68.100</span><br>
-        <span class="t-out"> 9   90.44 ms </span><span class="t-ip">45.183.47.211</span><br>
-        <span class="t-out">10   63.26 ms </span><span class="t-ip">190.242.170.29</span><br>
-        <span class="t-out">11   10.49 ms </span><span class="t-ip">181.176.250.89</span><br>
-        <span class="t-out">12   10.64 ms </span><span class="t-ip">181.176.171.49</span><br>
-        <span class="t-ok">13   10.68 ms  181.176.32.82  🎯 DESTINO</span><br>
-        <br>
-        <span class="t-out">Nmap done: 1 IP address (1 host up) scanned in </span><span class="t-hop">1369.64 seconds</span><br>
-        <span class="t-out">Raw packets sent: 4119 (188.616KB) | Rcvd: 16 (1.122KB)</span><br>
+      <div class="evidence-card" onclick="openLightbox('img/CAPA 2 INTERNET.jpeg')">
+        <img class="evidence-img" src="img/CAPA 2 INTERNET.jpeg" alt="Capa 2 Internet" />
+        <div class="evidence-meta">
+          <div class="evidence-cmd">CAPA 2</div>
+          <div class="evidence-desc">Comunicación mediante Internet y acceso a la plataforma.</div>
+        </div>
       </div>
-    </div>
-    <div class="result-grid" style="margin-top:1rem">
-      <div class="result-card">
-        <div class="card-label">Dispositivo detectado</div>
-        <div class="card-value" style="font-size:.9rem">Firewall / LB</div>
-        <div class="card-sub">F5 Networks TMOS</div>
+      <div class="evidence-card" onclick="openLightbox('https://github.com/JAIMES4224D/SIGESAPOL/blob/main/img/CAPA%203%20MONITOREO%20Y%20CAPTURA%20LOCAL.jpeg?raw=true')">
+        <img class="evidence-img" src="https://github.com/JAIMES4224D/SIGESAPOL/blob/main/img/CAPA%203%20MONITOREO%20Y%20CAPTURA%20LOCAL.jpeg?raw=true" alt="Capa 3 Monitoreo" />
+        <div class="evidence-meta">
+          <div class="evidence-cmd">CAPA 3</div>
+          <div class="evidence-desc">Monitoreo, captura de información y supervisión del sistema.</div>
+        </div>
       </div>
-      <div class="result-card">
-        <div class="card-label">Puertos TCP abiertos</div>
-        <div class="card-value">0 visibles</div>
-        <div class="card-sub">1000 filtered (no-response)</div>
+      <div class="evidence-card" onclick="openLightbox('img/CAPA 4 APLICACIONES.jpeg')">
+        <img class="evidence-img" src="img/CAPA 4 APLICACIONES.jpeg" alt="Capa 4 Aplicaciones" />
+        <div class="evidence-meta">
+          <div class="evidence-cmd">CAPA 4</div>
+          <div class="evidence-desc">Servicios y aplicaciones que ejecutan la lógica del sistema.</div>
+        </div>
       </div>
-      <div class="result-card">
-        <div class="card-label">Distancia de red</div>
-        <div class="card-value">13 hops</div>
-        <div class="card-sub">Nmap TRACEROUTE ICMP</div>
+      <div class="evidence-card" onclick="openLightbox('https://github.com/JAIMES4224D/SIGESAPOL/blob/main/img/CAPA%20DE%20DATOS%20(VIZUALIZACION%20FUNCIONAL).jpeg?raw=true')">
+        <img class="evidence-img" src="https://github.com/JAIMES4224D/SIGESAPOL/blob/main/img/CAPA%20DE%20DATOS%20(VIZUALIZACION%20FUNCIONAL).jpeg?raw=true" alt="Capa de Datos" />
+        <div class="evidence-meta">
+          <div class="evidence-cmd">CAPA DE DATOS</div>
+          <div class="evidence-desc">Almacenamiento, procesamiento y visualización de la información.</div>
+        </div>
       </div>
-      <div class="result-card">
-        <div class="card-label">Duración del scan</div>
-        <div class="card-value">1369 s</div>
-        <div class="card-sub">~22 minutos · T4 timing</div>
+      <div class="evidence-card" onclick="openLightbox('img/CAPA 6 SALIDA Y SOPORTE.jpeg')">
+        <img class="evidence-img" src="img/CAPA 6 SALIDA Y SOPORTE.jpeg" alt="Capa 6" />
+        <div class="evidence-meta">
+          <div class="evidence-cmd">CAPA 6</div>
+          <div class="evidence-desc">Salida de información, reportes y soporte operativo.</div>
+        </div>
       </div>
-    </div>
-  </section>
-
-  <!-- 7. HTTPS / cURL -->
-  <section id="https">
-    <div class="section-header">
-      <span class="section-num">07</span>
-      <h2>Verificación HTTPS — curl</h2>
-    </div>
-    <p style="color:var(--muted);margin-bottom:1rem;font-size:.85rem">
-      Se verifica el certificado SSL/TLS y las cabeceras HTTP del servidor usando <code style="color:var(--yellow)">curl -k -I</code>. El servidor responde con <strong style="color:var(--green)">HTTP/1.1 302</strong> redirigiendo al login con Apache/OpenSSL y framework Laravel.
-    </p>
-    <div class="terminal">
-      <div class="terminal-bar">
-        <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
-        <span class="terminal-title">debianjef@debianjef: ~</span>
-      </div>
-      <div class="terminal-body">
-        <span class="t-prompt">debianjef@debianjef:~$</span> <span class="t-cmd">curl -k -I https://sigesapol.dirsapolpnp.gob.pe</span><br>
-        <span class="t-ok">HTTP/1.1 302 Found</span><br>
-        <span class="t-out">Date: </span><span class="t-hop">Tue, 09 Jun 2026 02:50:40 GMT</span><br>
-        <span class="t-out">Server: </span><span class="t-ok">Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips</span><br>
-        <span class="t-out">Cache-Control: no-cache, max-age=0</span><br>
-        <span class="t-out">Location: </span><span class="t-ip">https://sigesapol.dirsapolpnp.gob.pe/auth/login</span><br>
-        <span class="t-out">Set-Cookie: XSRF-TOKEN=eyJpdiI... </span><span class="t-hop">(token Laravel)</span><br>
-        <span class="t-out">Set-Cookie: laravel_session=eyJpd... </span><span class="t-hop">httponly; Max-Age=2400; path=/</span><br>
-        <span class="t-out">Expires: Tue, 09 Jun 2026 02:50:40 GMT</span><br>
-        <span class="t-out">X-UA-Compatible: IE=edge</span><br>
-        <span class="t-out">X-Content-Type-Options: nosniff</span><br>
-        <span class="t-out">Content-Type: </span><span class="t-ok">text/html; charset=UTF-8</span><br>
-      </div>
-    </div>
-    <div class="result-grid" style="margin-top:1rem">
-      <div class="result-card">
-        <div class="card-label">Respuesta HTTP</div>
-        <div class="card-value">302 Found</div>
-        <div class="card-sub">Redirección a /auth/login</div>
-      </div>
-      <div class="result-card">
-        <div class="card-label">Servidor Web</div>
-        <div class="card-value" style="font-size:.85rem">Apache 2.4.6</div>
-        <div class="card-sub">Red Hat · OpenSSL 1.0.2k-fips</div>
-      </div>
-      <div class="result-card">
-        <div class="card-label">Framework</div>
-        <div class="card-value">Laravel</div>
-        <div class="card-sub">XSRF-TOKEN + laravel_session</div>
-      </div>
-      <div class="result-card">
-        <div class="card-label">Protocolo</div>
-        <div class="card-value" style="color:var(--green)">HTTPS ✓</div>
-        <div class="card-sub">SSL/TLS activo · OpenSSL FIPS</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 8. HTOP -->
-  <section id="htop">
-    <div class="section-header">
-      <span class="section-num">08</span>
-      <h2>Monitor de Procesos — htop</h2>
-    </div>
-    <p style="color:var(--muted);margin-bottom:1rem;font-size:.85rem">
-      Se monitorea el estado del sistema local durante la ejecución de las pruebas. Se observa el consumo de recursos en tiempo real con <code style="color:var(--yellow)">htop</code> mientras el navegador y el escaneo Nmap operan en paralelo.
-    </p>
-    <div class="terminal">
-      <div class="terminal-bar">
-        <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
-        <span class="terminal-title">htop — debianjef@debianjef</span>
-      </div>
-      <div class="terminal-body">
-        <span class="t-out">CPU[0] ████████████████░░░░ </span><span class="t-hop">16.2%</span><span class="t-out">  Tasks: </span><span class="t-ok">124</span><span class="t-out">, 723 thr, 101 kthr; </span><span class="t-ok">1 running</span><br>
-        <span class="t-out">CPU[1] ████████████░░░░░░░░ </span><span class="t-hop">11.2%</span><span class="t-out">  Load average: </span><span class="t-hop">2.07  2.15  1.35</span><br>
-        <span class="t-out">CPU[2] ████████████████░░░░ </span><span class="t-hop">18.3%</span><span class="t-out">  Uptime: </span><span class="t-ok">00:11:19</span><br>
-        <span class="t-out">CPU[3] ████████████░░░░░░░░ </span><span class="t-hop">15.6%</span><br>
-        <span class="t-out">Mem[████████████████████░░░░░░░░░░] </span><span class="t-hop">2.58G</span><span class="t-out">/6.74G</span><br>
-        <span class="t-out">Swp[░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] </span><span class="t-ok">0K</span><span class="t-out">/6.96G</span><br>
-        <br>
-        <span class="t-out">  PID USER     PRI NI  VIRT   RES SHR CPU% MEM%  TIME+  Command</span><br>
-        <span class="t-ok"> 3471 debianjef  20  0 26.5G 293M 101M 13.9  4.3  0:21  firefox-esr (contentproc)</span><br>
-        <span class="t-out"> 3906 debianjef  20  0 6848  5484 3072  7.7  0.1  0:00  htop</span><br>
-        <span class="t-out"> 1839 debianjef  20  0 1916M 108M 70388  6.2  1.6  0:21  Xorg vt2</span><br>
-        <span class="t-out"> 2063 debianjef  20  0 4752M 249M 130M   5.3  3.6  0:33  gnome-shell</span><br>
-        <span class="t-out"> 3541 debianjef  20  0 680M  50820 40320  4.3  0.7  0:04  gnome-terminal-server</span><br>
-        <span class="t-out"> 2705 debianjef  20  0 19.2G 437M 223M  2.4  6.3  0:34  firefox-esr</span><br>
-        <span class="t-out"> 3070 debianjef  20  0 11.5G 880M 120M  2.4 12.8  2:46  firefox-esr (contentproc)</span><br>
-      </div>
-    </div>
-    <div class="result-grid" style="margin-top:1rem">
-      <div class="result-card">
-        <div class="card-label">RAM usada</div>
-        <div class="card-value">2.58 GB</div>
-        <div class="card-sub">de 6.74 GB disponibles</div>
-      </div>
-      <div class="result-card">
-        <div class="card-label">Load average</div>
-        <div class="card-value">2.07</div>
-        <div class="card-sub">Nmap + Firefox activos</div>
-      </div>
-      <div class="result-card">
-        <div class="card-label">Procesos activos</div>
-        <div class="card-value">124</div>
-        <div class="card-sub">723 hilos · 1 running</div>
-      </div>
-      <div class="result-card">
-        <div class="card-label">Swap usado</div>
-        <div class="card-value" style="color:var(--green)">0 KB</div>
-        <div class="card-sub">RAM suficiente · sin paginación</div>
+      <div class="evidence-card" onclick="openLightbox('img/SERVICIO TRANVERSALES.jpeg')">
+        <img class="evidence-img" src="img/SERVICIO TRANVERSALES.jpeg" alt="Servicios Transversales" />
+        <div class="evidence-meta">
+          <div class="evidence-cmd">SERVICIOS TRANSVERSALES</div>
+          <div class="evidence-desc">Componentes compartidos que brindan seguridad, autenticación, monitoreo y administración del sistema.</div>
+        </div>
       </div>
     </div>
   </section>
@@ -1339,43 +1241,36 @@ traceroute to sigesapol.dirsapolpnp.gob.pe (181.176.32.82), 30 hops max
     if (e.target === this) closeLightbox();
   });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
-  // ========== MODO OSCURO / CLARO ==========
-(function() {
-  const toggleBtn = document.getElementById('theme-toggle');
-  
-  // Recuperar preferencia guardada o detectar preferencia del sistema
-  const savedTheme = localStorage.getItem('theme');
-  const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  
-  let currentTheme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
-  
-  // Aplicar tema inicial
-  function applyTheme(theme) {
-    document.documentElement.setAttribute('data-theme', theme);
+
+  (function() {
+    const toggleBtn = document.getElementById('theme-toggle');
+    const savedTheme = localStorage.getItem('theme');
+    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    let currentTheme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
+
+    function applyTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      if (toggleBtn) {
+        toggleBtn.innerHTML = theme === 'dark' ? '☀️ Modo claro' : '🌙 Modo oscuro';
+      }
+      localStorage.setItem('theme', theme);
+    }
+
     if (toggleBtn) {
-      toggleBtn.innerHTML = theme === 'dark' ? '☀️ Modo claro' : '🌙 Modo oscuro';
+      toggleBtn.addEventListener('click', () => {
+        const newTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        applyTheme(newTheme);
+      });
     }
-    localStorage.setItem('theme', theme);
-  }
-  
-  // Toggle al hacer clic
-  if (toggleBtn) {
-    toggleBtn.addEventListener('click', () => {
-      const newTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-      applyTheme(newTheme);
+
+    applyTheme(currentTheme);
+
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+      if (!localStorage.getItem('theme')) {
+        applyTheme(e.matches ? 'dark' : 'light');
+      }
     });
-  }
-  
-  // Aplicar tema inicial
-  applyTheme(currentTheme);
-  
-  // Escuchar cambios de preferencia del sistema
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-    if (!localStorage.getItem('theme')) {
-      applyTheme(e.matches ? 'dark' : 'light');
-    }
-  });
-})();
+  })();
 </script>
 </body>
 </html>
